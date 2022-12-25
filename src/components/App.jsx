@@ -20,6 +20,8 @@ export class App extends Component {
     });
   };
 
+
+
   addContact = (data) => {
     const { name, number } = data;
     if (this.checkDoubleContact(data)) {
@@ -31,10 +33,27 @@ export class App extends Component {
       name,
       number,
     };
+    console.log( 'hhhhhh', this.setState)
+
     this.setState(prevState => ({
       contacts: [newContact, ...prevState.contacts],
     }));
   };
+
+  componentDidUpdate(prevProps, prevState){
+    if(this.state.contacts !== prevState.contacts){
+       console.log( 'обновилось поле контактов')
+       localStorage.setItem('lsContacts',JSON.stringify(this.state.contacts))
+    }
+  }
+
+  componentDidMount(){
+    const lsContact = localStorage.getItem('lsContacts');
+    const lsContactParsed = JSON.parse(lsContact);
+  if (lsContactParsed){
+    this.setState({contacts: lsContactParsed})
+  }}
+
 
   checkDoubleContact = (inputData) => {
     return this.state.contacts.find(contact => contact.name === inputData.name);
